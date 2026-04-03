@@ -1,0 +1,292 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    container_name: zookeeper
+    user: "0:0"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    tmpfs:
+      - /var/lib/zookeeper/data
+      - /var/lib/zookeeper/log
+    networks:
+      - ecommerce-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: kafka
+    user: "0:0"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    tmpfs:
+      - /var/lib/kafka/data
+    networks:
+      - ecommerce-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+      - zookeeper
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      DYNAMIC_CONFIG_ENABLED: "true"
+    ports:
+      - "8090:8080"
+    networks:
+      - ecommerce-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: order_db,payment_db,shipping_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/create-multiple-postgres-dbs.sh:/docker-entrypoint-initdb.d/create-multiple-postgres-dbs.sh
+    networks:
+      - ecommerce-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "5050:80"
+    networks:
+      - ecommerce-network
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    tmpfs:
+      - /data/db
+    networks:
+      - ecommerce-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - ecommerce-network
+
+  service-registry:
+    build:
+      context: .
+      dockerfile: Dockerfile.service-registry
+    image: ecommerce/service-registry:latest
+    container_name: service-registry
+    depends_on:
+      kafka:
+        condition: service_started
+      postgres:
+        condition: service_started
+      mongodb:
+        condition: service_started
+      redis:
+        condition: service_started
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.order-service
+    image: ecommerce/order-service:latest
+    container_name: order-service
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      kafka:
+        condition: service_started
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+    networks:
+      - ecommerce-network
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.inventory-service
+    image: ecommerce/inventory-service:latest
+    container_name: inventory-service
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+      kafka:
+        condition: service_started
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+    networks:
+      - ecommerce-network
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.payment-service
+    image: ecommerce/payment-service:latest
+    container_name: payment-service
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      kafka:
+        condition: service_started
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+    networks:
+      - ecommerce-network
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.notification-service
+    image: ecommerce/notification-service:latest
+    container_name: notification-service
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+    networks:
+      - ecommerce-network
+
+  shipping-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.shipping-service
+    image: ecommerce/shipping-service:latest
+    container_name: shipping-service
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      kafka:
+        condition: service_started
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+    networks:
+      - ecommerce-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-gateway
+    image: ecommerce/api-gateway:latest
+    container_name: api-gateway
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      order-service:
+        condition: service_started
+      inventory-service:
+        condition: service_started
+      payment-service:
+        condition: service_started
+      notification-service:
+        condition: service_started
+      shipping-service:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+    networks:
+      - ecommerce-network
+
+  mvp-frontend:
+    image: nginx:1.27-alpine
+    container_name: mvp-frontend
+    depends_on:
+      - api-gateway
+    ports:
+      - "3000:80"
+    volumes:
+      - ./mvp-frontend:/usr/share/nginx/html:ro
+      - ./mvp-frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - ecommerce-network
+
+volumes:
+  postgres-data:
+  redis-data:
+  pgadmin-data:
+
+networks:
+  ecommerce-network:
+    driver: bridge
+
+# Made with Bob

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-commerce MVP Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+
+  <header class="hero">
+    <p class="kicker">E-commerce Microservices MVP</p>
+    <h1>Scenario Console</h1>
+    <p class="subtitle">
+      Use this UI to create inventory, place orders, and inspect Saga outcomes across services.
+    </p>
+    <div class="hero-actions">
+      <button id="check-gateway" class="btn btn-primary" type="button">Check Gateway Health</button>
+      <span id="gateway-status" class="status status-neutral">Gateway: unknown</span>
+      <a class="btn btn-ghost" href="http://localhost:8761" target="_blank" rel="noreferrer">Open Eureka</a>
+      <a class="btn btn-ghost" href="http://localhost:8080/actuator/health" target="_blank" rel="noreferrer">Open Gateway Health</a>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="card" id="inventory-card">
+      <h2>1) Inventory Setup</h2>
+      <form id="inventory-form" class="form">
+        <label>
+          Name
+          <input id="inventory-name" type="text" placeholder="Smartphone" required />
+        </label>
+        <label>
+          Description
+          <input id="inventory-description" type="text" placeholder="Latest model" />
+        </label>
+        <label>
+          Quantity
+          <input id="inventory-quantity" type="number" min="0" value="100" required />
+        </label>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Create Item</button>
+          <button id="refresh-inventory" class="btn" type="button">Refresh List</button>
+        </div>
+      </form>
+      <p class="hint">Click "Use" to prefill product fields in the order form.</p>
+      <div id="inventory-list" class="results">No inventory loaded yet.</div>
+      <div id="inventory-feedback" class="status status-neutral">Waiting for action.</div>
+    </section>
+
+    <section class="card" id="order-card">
+      <h2>2) Create Order</h2>
+      <form id="order-form" class="form">
+        <label>
+          Customer UUID
+          <div class="input-with-btn">
+            <input id="order-customer-id" type="text" placeholder="3fa85f64-5717-4562-b3fc-2c963f66afa6" required />
+            <button id="generate-order-customer-id" class="btn btn-small" type="button">Generate UUID</button>
+          </div>
+        </label>
+        <label>
+          Product UUID
+          <input id="order-product-id" type="text" placeholder="Inventory item id" required />
+        </label>
+        <label>
+          Product Name
+          <input id="order-product-name" type="text" placeholder="Smartphone" required />
+        </label>
+        <div class="inline-fields">
+          <label>
+            Quantity
+            <input id="order-quantity" type="number" min="1" value="1" required />
+          </label>
+          <label>
+            Unit Price
+            <input id="order-price" type="number" min="0" step="0.01" value="799.99" required />
+          </label>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Create Order</button>
+        </div>
+      </form>
+      <div id="order-feedback" class="status status-neutral">Waiting for action.</div>
+      <article class="entity-panel">
+        <h3>Latest Order Snapshot</h3>
+        <div id="created-order-card" class="entity-card empty">No order created yet.</div>
+      </article>
+    </section>
+
+    <section class="card" id="flow-card">
+      <h2>3) Track Saga Flow</h2>
+      <form id="flow-form" class="form">
+        <label>
+          Order UUID
+          <input id="flow-order-id" type="text" placeholder="Paste orderId" required />
+        </label>
+        <label>
+          Customer UUID (optional)
+          <div class="input-with-btn">
+            <input id="flow-customer-id" type="text" placeholder="Used for customer notifications" />
+            <button id="generate-flow-customer-id" class="btn btn-small" type="button">Generate UUID</button>
+          </div>
+        </label>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Fetch Related Records</button>
+        </div>
+      </form>
+
+      <p class="hint">Event-driven lane updates from order, payment, shipping, and notification services.</p>
+      <div id="saga-lane" class="saga-lane">
+        <article id="saga-order" class="saga-node saga-wait">
+          <p>Order</p>
+          <span>Awaiting lookup</span>
+        </article>
+        <article id="saga-inventory" class="saga-node saga-wait">
+          <p>Inventory</p>
+          <span>Pending reservation</span>
+        </article>
+        <article id="saga-payment" class="saga-node saga-wait">
+          <p>Payment</p>
+          <span>Pending payment event</span>
+        </article>
+        <article id="saga-shipping" class="saga-node saga-wait">
+          <p>Shipping</p>
+          <span>Pending shipment event</span>
+        </article>
+        <article id="saga-notification" class="saga-node saga-wait">
+          <p>Notification</p>
+          <span>Pending outbound message</span>
+        </article>
+      </div>
+
+      <div class="mini-grid cards-grid">
+        <article>
+          <h3>Order Service</h3>
+          <div id="flow-order" class="entity-card empty">No data</div>
+        </article>
+        <article>
+          <h3>Payment Service</h3>
+          <div id="flow-payment" class="entity-card empty">No data</div>
+        </article>
+        <article>
+          <h3>Shipping Service</h3>
+          <div id="flow-shipping" class="entity-card empty">No data</div>
+        </article>
+        <article>
+          <h3>Notifications by Order</h3>
+          <div id="flow-notify-order" class="entity-card empty">No data</div>
+        </article>
+        <article>
+          <h3>Notifications by Customer</h3>
+          <div id="flow-notify-customer" class="entity-card empty">No data</div>
+        </article>
+      </div>
+      <div id="flow-feedback" class="status status-neutral">Ready.</div>
+    </section>
+
+    <section class="card" id="check-card">
+      <h2>4) Inventory Availability Check</h2>
+      <form id="availability-form" class="form">
+        <label>
+          Product UUID
+          <input id="check-product-id" type="text" placeholder="Inventory item id" required />
+        </label>
+        <label>
+          Requested Quantity
+          <input id="check-quantity" type="number" min="1" value="1" required />
+        </label>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Check Availability</button>
+        </div>
+      </form>
+      <div id="availability-feedback" class="status status-neutral">Ready.</div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Frontend base URL: <code>http://localhost:3000</code> -> proxied backend: <code>/gateway/*</code></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

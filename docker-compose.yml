@@ -1,0 +1,204 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    container_name: zookeeper
+    user: "0:0"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    tmpfs:
+      - /var/lib/zookeeper/data
+      - /var/lib/zookeeper/log
+    networks:
+      - ecommerce-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: kafka
+    user: "0:0"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    tmpfs:
+      - /var/lib/kafka/data
+    networks:
+      - ecommerce-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: order_db,payment_db,shipping_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/create-multiple-postgres-dbs.sh:/docker-entrypoint-initdb.d/create-multiple-postgres-dbs.sh
+    networks:
+      - ecommerce-network
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    tmpfs:
+      - /data/db
+    networks:
+      - ecommerce-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - ecommerce-network
+
+  service-registry:
+    image: eclipse-temurin:17-jre
+    container_name: service-registry
+    depends_on:
+      - kafka
+      - postgres
+      - mongodb
+      - redis
+    ports:
+      - "8761:8761"
+    volumes:
+      - ./service-registry/target/service-registry-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "/app/app.jar"]
+    networks:
+      - ecommerce-network
+
+  order-service:
+    image: eclipse-temurin:17-jre
+    container_name: order-service
+    depends_on:
+      - service-registry
+      - postgres
+      - kafka
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./order-service/target/order-service-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "/app/app.jar"]
+    networks:
+      - ecommerce-network
+
+  inventory-service:
+    image: eclipse-temurin:17-jre
+    container_name: inventory-service
+    depends_on:
+      - service-registry
+      - mongodb
+      - kafka
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./inventory-service/target/inventory-service-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "/app/app.jar"]
+    networks:
+      - ecommerce-network
+
+  payment-service:
+    image: eclipse-temurin:17-jre
+    container_name: payment-service
+    depends_on:
+      - service-registry
+      - postgres
+      - kafka
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./payment-service/target/payment-service-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "/app/app.jar"]
+    networks:
+      - ecommerce-network
+
+  notification-service:
+    image: eclipse-temurin:17-jre
+    container_name: notification-service
+    depends_on:
+      - service-registry
+      - mongodb
+      - redis
+      - kafka
+    ports:
+      - "8084:8084"
+    volumes:
+      - ./notification-service/target/notification-service-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "/app/app.jar"]
+    networks:
+      - ecommerce-network
+
+  shipping-service:
+    image: eclipse-temurin:17-jre
+    container_name: shipping-service
+    depends_on:
+      - service-registry
+      - postgres
+      - kafka
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./shipping-service/target/shipping-service-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "/app/app.jar"]
+    networks:
+      - ecommerce-network
+
+  api-gateway:
+    image: eclipse-temurin:17-jre
+    container_name: api-gateway
+    depends_on:
+      - service-registry
+      - order-service
+      - inventory-service
+      - payment-service
+      - notification-service
+      - shipping-service
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./api-gateway/target/api-gateway-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    command: ["java", "-jar", "/app/app.jar"]
+    networks:
+      - ecommerce-network
+
+  mvp-frontend:
+    image: nginx:1.27-alpine
+    container_name: mvp-frontend
+    depends_on:
+      - api-gateway
+    ports:
+      - "3000:80"
+    volumes:
+      - ./mvp-frontend:/usr/share/nginx/html:ro
+      - ./mvp-frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - ecommerce-network
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  ecommerce-network:
+    driver: bridge

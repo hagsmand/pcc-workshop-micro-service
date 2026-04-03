@@ -1,0 +1,31 @@
+FROM maven:3.9-eclipse-temurin-17 AS build
+
+WORKDIR /build
+
+# Copy and install parent pom first
+COPY pom.xml ./pom.xml
+RUN mvn -N install
+
+# Copy common-library first and build it
+COPY common-library/pom.xml ./common-library/pom.xml
+COPY common-library/src ./common-library/src
+RUN mvn -f common-library/pom.xml clean install -DskipTests
+
+# Copy order-service and build it
+COPY order-service/pom.xml ./order-service/pom.xml
+COPY order-service/src ./order-service/src
+RUN mvn -f order-service/pom.xml clean package -DskipTests
+
+# Runtime stage
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+
+# Copy the built jar
+COPY --from=build /build/order-service/target/order-service-*.jar app.jar
+
+# Expose port
+EXPOSE 8081
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,0 +1,18 @@
+FROM maven:3.9-eclipse-temurin-17 AS build
+
+WORKDIR /build
+
+# Copy and install parent pom first
+COPY pom.xml ./pom.xml
+RUN mvn -N install
+
+# Copy common-library
+COPY common-library/pom.xml ./common-library/pom.xml
+COPY common-library/src ./common-library/src
+
+# Build common-library
+RUN mvn -f common-library/pom.xml clean install -DskipTests
+
+# This is a build-only stage, no runtime needed
+FROM scratch
+COPY --from=build /root/.m2/repository /m2-cache

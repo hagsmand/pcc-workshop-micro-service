@@ -1,0 +1,35 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Shell scripts must always use LF (Unix line endings)
+*.sh text eol=lf
+
+# PowerShell scripts can use CRLF on Windows, LF elsewhere
+*.ps1 text
+
+# Batch files must use CRLF on Windows
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Docker and compose files should use LF
+Dockerfile* text eol=lf
+docker-compose*.yml text eol=lf
+podman-compose*.yml text eol=lf
+
+# Source code files
+*.java text
+*.xml text
+*.properties text
+*.yml text
+*.yaml text
+*.json text
+*.md text
+
+# Binary files
+*.jar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
