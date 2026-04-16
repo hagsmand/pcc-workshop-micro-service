@@ -10,6 +10,7 @@ graph LR
     style A fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
     style B fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
     style C fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    linkStyle 0,1 stroke:#000,stroke-width:2px
 ```
 
 ## Order Service Test Flow Diagram
@@ -53,6 +54,7 @@ flowchart TD
     style T1 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
     style T2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
     style T3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
+    linkStyle default stroke:#000,stroke-width:2px
 ```
 
 ## Test Scenario Complexity Levels
@@ -92,6 +94,7 @@ graph TD
     style A1 fill:#ffccbc,stroke:#d84315,stroke-width:1px,color:#000
     style A2 fill:#ffccbc,stroke:#d84315,stroke-width:1px,color:#000
     style A3 fill:#ffccbc,stroke:#d84315,stroke-width:1px,color:#000
+    linkStyle default stroke:#000,stroke-width:2px
 ```
 
 ## Mocking Strategy Diagram
@@ -133,6 +136,7 @@ graph TD
     style R2 fill:#f3e5f5,stroke:#4a148c,stroke-width:1px,color:#000
     style K1 fill:#f3e5f5,stroke:#4a148c,stroke-width:1px,color:#000
     style K2 fill:#f3e5f5,stroke:#4a148c,stroke-width:1px,color:#000
+    linkStyle default stroke:#000,stroke-width:2px
 ```
 
 ## Test Execution Flow
@@ -171,6 +175,7 @@ flowchart TD
     style Step5 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
     style Step6 fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
     style End fill:#c8e6c9,stroke:#2e7d32,stroke-width:3px,color:#000
+    linkStyle default stroke:#000,stroke-width:2px
 ```
 
 ## AAA vs GWT Comparison
@@ -208,6 +213,7 @@ graph LR
     style G1 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
     style G2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
     style G3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
+    linkStyle 0,1,2,3,4,5,6,7 stroke:#000,stroke-width:2px
 ```
 
 ## Success Metrics Dashboard
@@ -229,6 +235,7 @@ graph TD
     style Coverage fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
     style Scenarios fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
     style Quality fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    linkStyle default stroke:#000,stroke-width:2px
 ```
 
 ## Workshop Timeline
@@ -263,4 +270,4 @@ gantt
 
 **Use these Mermaid diagrams during the workshop to help participants visualize the testing concepts and flow!**
 
-**Note:** GitHub will automatically render these Mermaid diagrams when viewing the markdown file. All text is now in black for better readability.
+**Note:** GitHub will automatically render these Mermaid diagrams when viewing the markdown file. All text and arrows are now in black for better readability.
