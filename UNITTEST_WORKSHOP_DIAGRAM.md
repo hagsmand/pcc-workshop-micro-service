@@ -7,9 +7,9 @@ graph LR
     A[GIVEN<br/>Setup<br/>What's the initial state?] --> B[WHEN<br/>Action<br/>What happens?]
     B --> C[THEN<br/>Assertion<br/>What should be the result?]
     
-    style A fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style B fill:#fff9c4,stroke:#f57f17,stroke-width:2px
-    style C fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style A fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
+    style B fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    style C fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
 ```
 
 ## Order Service Test Flow Diagram
@@ -42,10 +42,17 @@ flowchart TD
     Given --> When
     When --> Then
     
-    style Start fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style Given fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style When fill:#fff9c4,stroke:#f57f17,stroke-width:2px
-    style Then fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style Start fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style Given fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
+    style When fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    style Then fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style G1 fill:#e1f5ff,stroke:#01579b,stroke-width:1px,color:#000
+    style G2 fill:#e1f5ff,stroke:#01579b,stroke-width:1px,color:#000
+    style W1 fill:#fff9c4,stroke:#f57f17,stroke-width:1px,color:#000
+    style W2 fill:#fff9c4,stroke:#f57f17,stroke-width:1px,color:#000
+    style T1 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
+    style T2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
+    style T3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
 ```
 
 ## Test Scenario Complexity Levels
@@ -75,9 +82,16 @@ graph TD
     Easy --> Medium
     Medium --> Advanced
     
-    style Easy fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style Medium fill:#fff9c4,stroke:#f57f17,stroke-width:2px
-    style Advanced fill:#ffccbc,stroke:#d84315,stroke-width:2px
+    style Easy fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Medium fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    style Advanced fill:#ffccbc,stroke:#d84315,stroke-width:2px,color:#000
+    style E1 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
+    style M1 fill:#fff9c4,stroke:#f57f17,stroke-width:1px,color:#000
+    style M2 fill:#fff9c4,stroke:#f57f17,stroke-width:1px,color:#000
+    style M3 fill:#fff9c4,stroke:#f57f17,stroke-width:1px,color:#000
+    style A1 fill:#ffccbc,stroke:#d84315,stroke-width:1px,color:#000
+    style A2 fill:#ffccbc,stroke:#d84315,stroke-width:1px,color:#000
+    style A3 fill:#ffccbc,stroke:#d84315,stroke-width:1px,color:#000
 ```
 
 ## Mocking Strategy Diagram
@@ -108,11 +122,17 @@ graph TD
     
     Why[WHY MOCK?<br/>✓ Isolate unit under test<br/>✓ Control test data<br/>✓ Verify interactions<br/>✓ Fast execution no real DB/Kafka<br/>✓ Deterministic results]
     
-    style SUT fill:#e1f5ff,stroke:#01579b,stroke-width:3px
-    style Mocks fill:#fff9c4,stroke:#f57f17,stroke-width:2px
-    style RepoBehavior fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style KafkaBehavior fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style Why fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style SUT fill:#e1f5ff,stroke:#01579b,stroke-width:3px,color:#000
+    style Mocks fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    style RepoBehavior fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style KafkaBehavior fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style Why fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Repo fill:#fff9c4,stroke:#f57f17,stroke-width:1px,color:#000
+    style Kafka fill:#fff9c4,stroke:#f57f17,stroke-width:1px,color:#000
+    style R1 fill:#f3e5f5,stroke:#4a148c,stroke-width:1px,color:#000
+    style R2 fill:#f3e5f5,stroke:#4a148c,stroke-width:1px,color:#000
+    style K1 fill:#f3e5f5,stroke:#4a148c,stroke-width:1px,color:#000
+    style K2 fill:#f3e5f5,stroke:#4a148c,stroke-width:1px,color:#000
 ```
 
 ## Test Execution Flow
@@ -143,14 +163,14 @@ flowchart TD
     Step5 --> Step6
     Step6 --> End
     
-    style Start fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style Step1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style Step2 fill:#fff9c4,stroke:#f57f17,stroke-width:2px
-    style Step3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style Step4 fill:#ffccbc,stroke:#d84315,stroke-width:2px
-    style Step5 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style Step6 fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style End fill:#c8e6c9,stroke:#2e7d32,stroke-width:3px
+    style Start fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style Step1 fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
+    style Step2 fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    style Step3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Step4 fill:#ffccbc,stroke:#d84315,stroke-width:2px,color:#000
+    style Step5 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style Step6 fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
+    style End fill:#c8e6c9,stroke:#2e7d32,stroke-width:3px,color:#000
 ```
 
 ## AAA vs GWT Comparison
@@ -179,9 +199,15 @@ graph LR
     
     Usage[WHEN TO USE:<br/>AAA: Internal team testing, technical docs<br/>GWT: Stakeholder communication, BDD, acceptance criteria<br/><br/>BOTH ARE VALID! Choose based on your audience.]
     
-    style AAA fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style GWT fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style Usage fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style AAA fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
+    style GWT fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Usage fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    style A1 fill:#e1f5ff,stroke:#01579b,stroke-width:1px,color:#000
+    style A2 fill:#e1f5ff,stroke:#01579b,stroke-width:1px,color:#000
+    style A3 fill:#e1f5ff,stroke:#01579b,stroke-width:1px,color:#000
+    style G1 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
+    style G2 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
+    style G3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
 ```
 
 ## Success Metrics Dashboard
@@ -199,10 +225,10 @@ graph TD
     Coverage --> Scenarios
     Scenarios --> Quality
     
-    style Metrics fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style Coverage fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style Scenarios fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style Quality fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style Metrics fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style Coverage fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
+    style Scenarios fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Quality fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
 ```
 
 ## Workshop Timeline
@@ -237,4 +263,4 @@ gantt
 
 **Use these Mermaid diagrams during the workshop to help participants visualize the testing concepts and flow!**
 
-**Note:** GitHub will automatically render these Mermaid diagrams when viewing the markdown file.
+**Note:** GitHub will automatically render these Mermaid diagrams when viewing the markdown file. All text is now in black for better readability.
