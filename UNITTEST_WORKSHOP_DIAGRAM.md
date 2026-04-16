@@ -1,5 +1,31 @@
 # Unit Testing Workshop - Visual Diagrams
 
+![Workshop Duration](https://img.shields.io/badge/duration-30--45%20minutes-blue.svg)
+![Difficulty](https://img.shields.io/badge/difficulty-beginner%20to%20advanced-green.svg)
+![Test Pattern](https://img.shields.io/badge/pattern-Given--When--Then-orange.svg)
+![Last Updated](https://img.shields.io/badge/last%20updated-2026--04--16-brightgreen.svg)
+
+Visual reference guide for understanding Test-Driven Development (TDD) patterns and unit testing concepts using the Order Service as a practical example.
+
+*Workshop Focus: Order Service Unit Testing*  
+*Pattern: Given-When-Then (GWT)*  
+*Last Updated: 2026-04-16*
+
+---
+
+## Table of Contents
+
+- [Given-When-Then Pattern Flow](#given-when-then-pattern-flow)
+- [Order Service Test Flow Diagram](#order-service-test-flow-diagram)
+- [Test Scenario Complexity Levels](#test-scenario-complexity-levels)
+- [Mocking Strategy Diagram](#mocking-strategy-diagram)
+- [Test Execution Flow](#test-execution-flow)
+- [AAA vs GWT Comparison](#aaa-vs-gwt-comparison)
+- [Success Metrics Dashboard](#success-metrics-dashboard)
+- [Workshop Timeline](#workshop-timeline)
+
+---
+
 ## Given-When-Then Pattern Flow
 
 ```mermaid
@@ -11,6 +37,13 @@ graph LR
     style B fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
     style C fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
 ```
+
+**Pattern Explanation:**
+- **GIVEN**: Set up the test environment and initial conditions
+- **WHEN**: Execute the action or behavior being tested
+- **THEN**: Verify the expected outcomes and side effects
+
+---
 
 ## Order Service Test Flow Diagram
 
@@ -55,6 +88,13 @@ flowchart TD
     style T3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
 ```
 
+**Key Testing Points:**
+- Mock external dependencies (repository, Kafka)
+- Verify business logic (price calculation, status transitions)
+- Confirm side effects (database saves, event publishing)
+
+---
+
 ## Test Scenario Complexity Levels
 
 ```mermaid
@@ -93,6 +133,13 @@ graph TD
     style A2 fill:#ffccbc,stroke:#d84315,stroke-width:1px,color:#000
     style A3 fill:#ffccbc,stroke:#d84315,stroke-width:1px,color:#000
 ```
+
+**Progressive Learning Path:**
+- Start with simple scenarios to build confidence
+- Progress to medium complexity for real-world patterns
+- Challenge with advanced scenarios for edge cases
+
+---
 
 ## Mocking Strategy Diagram
 
@@ -135,6 +182,14 @@ graph TD
     style K2 fill:#f3e5f5,stroke:#4a148c,stroke-width:1px,color:#000
 ```
 
+**Mocking Best Practices:**
+- Mock external dependencies only (databases, message queues, external APIs)
+- Keep business logic in the real implementation
+- Verify both return values and side effects
+- Use argument captors for complex verification
+
+---
+
 ## Test Execution Flow
 
 ```mermaid
@@ -173,6 +228,16 @@ flowchart TD
     style End fill:#c8e6c9,stroke:#2e7d32,stroke-width:3px,color:#000
 ```
 
+**Workshop Workflow:**
+1. **Understand** - Learn the concepts and codebase
+2. **Prepare** - Craft effective AI prompts
+3. **Generate** - Use AI to create test code
+4. **Implement** - Integrate tests into project
+5. **Verify** - Run and validate tests
+6. **Review** - Reflect and improve
+
+---
+
 ## AAA vs GWT Comparison
 
 ```mermaid
@@ -210,6 +275,13 @@ graph LR
     style G3 fill:#c8e6c9,stroke:#2e7d32,stroke-width:1px,color:#000
 ```
 
+**Pattern Selection Guide:**
+- **AAA (Arrange-Act-Assert)**: Technical teams, unit tests, implementation details
+- **GWT (Given-When-Then)**: Business stakeholders, BDD, user stories, acceptance criteria
+- Both patterns are equivalent in structure, differing mainly in terminology and audience
+
+---
+
 ## Success Metrics Dashboard
 
 ```mermaid
@@ -230,6 +302,13 @@ graph TD
     style Scenarios fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
     style Quality fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
 ```
+
+**Quality Indicators:**
+- **Coverage**: Aim for >80% line coverage
+- **Scenarios**: Complete all 7 test scenarios
+- **Quality**: Follow best practices checklist
+
+---
 
 ## Workshop Timeline
 
@@ -259,8 +338,34 @@ gantt
     Review & Discussion           :42, 5m
 ```
 
+**Time Management:**
+- **Setup (5 min)**: Understand concepts and codebase
+- **Easy (5 min)**: Build confidence with simple scenario
+- **Medium (15 min)**: Practice with realistic scenarios
+- **Advanced (17 min)**: Challenge with edge cases
+- **Wrap-up (5 min)**: Review and discuss learnings
+
 ---
 
-**Use these Mermaid diagrams during the workshop to help participants visualize the testing concepts and flow!**
+## Usage Notes
 
-**Note:** GitHub will automatically render these Mermaid diagrams when viewing the markdown file. All text is now in black for better readability.
+**For Workshop Facilitators:**
+- Use these diagrams during presentation to explain concepts visually
+- Reference specific diagrams when introducing each workshop phase
+- Display the timeline to keep participants on track
+
+**For Participants:**
+- Refer to these diagrams when writing tests
+- Use the GWT pattern flow as a mental model
+- Check the success metrics to validate your work
+
+**Technical Notes:**
+- All diagrams use Mermaid syntax and render automatically on GitHub
+- Text is styled in black for optimal readability
+- Color coding indicates different phases and complexity levels
+
+---
+
+*Created for: PCC Workshop - Microservices Unit Testing*  
+*Service Focus: Order Service (OrderServiceImpl)*  
+*Last Updated: 2026-04-16 14:31:00 +0700*
