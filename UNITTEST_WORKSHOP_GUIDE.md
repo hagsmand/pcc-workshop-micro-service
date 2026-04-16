@@ -30,6 +30,13 @@ Technical execution focused on test structure:
 - **Act**: Execute the method under test
 - **Assert**: Verify the results
 
+**Example Story:**
+```
+Arrange a customer with ID "123" ordering 2 laptops at $1000 each
+Act by creating the order
+Assert that the total amount is $2000 and the status is PENDING
+```
+
 #### 3. Setup-Exercise-Verify-Teardown (SEVT)
 For integration and system testing with cleanup needs.
 
