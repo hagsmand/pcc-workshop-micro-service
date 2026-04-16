@@ -1,4 +1,4 @@
-package com.hacisimsek.paymentservice;
+package com.hacisimsek.payment;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
