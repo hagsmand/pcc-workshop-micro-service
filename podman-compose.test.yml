@@ -29,11 +29,13 @@ x-maven-test-runner: &maven-test-runner
 
 services:
   unit-tests:
+    preivileged: true
     <<: *maven-test-runner
     command: >
       bash -lc 'mvn -B -ntp $$MAVEN_ARGS $$MAVEN_MODULES clean test'
 
   coverage:
+    preivileged: true
     <<: *maven-test-runner
     command: >
       bash -lc 'mvn -B -ntp $$MAVEN_ARGS $$MAVEN_MODULES -Pcoverage clean verify'
