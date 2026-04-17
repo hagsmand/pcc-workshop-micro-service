@@ -31,7 +31,7 @@ services:
   unit-tests:
     <<: *maven-test-runner
     command: >
-      bash -lc 'mvn -B -ntp $$MAVEN_ARGS $$MAVEN_MODULES test'
+      bash -lc 'mvn -B -ntp $$MAVEN_ARGS $$MAVEN_MODULES clean test'
 
   coverage:
     <<: *maven-test-runner
