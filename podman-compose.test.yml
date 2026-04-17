@@ -9,7 +9,7 @@ x-maven-test-runner: &maven-test-runner
   environment:
     MAVEN_ARGS: ${MAVEN_ARGS:-}
     MAVEN_MODULES: ${MAVEN_MODULES:-}
-    MAVEN_OPTS: ${MAVEN_OPTS:-}
+    MAVEN_OPTS: "-Djdk.attach.allowAttachSelf=true ${MAVEN_OPTS:-}"
     SPRING_PROFILES_ACTIVE: test
     SPRING_MAIN_BANNER_MODE: "off"
     SPRING_DATASOURCE_URL: jdbc:h2:mem:pcc_unit_tests;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
