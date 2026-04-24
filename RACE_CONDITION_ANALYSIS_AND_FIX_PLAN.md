@@ -276,7 +276,7 @@ Step 4 (Implementation) → Step 5 (Documentation) → Step 6 (Verification) →
 Step 7 (Results) → Step 8 (Summary)
 ```
 
-### Estimated Time
+### Estimated Time (Human Implementation)
 - Steps 1-2: 1 hour (Analysis + Test Design)
 - Step 3: 30 minutes (Test Execution)
 - Step 4: 2 hours (Implementation)
@@ -284,6 +284,22 @@ Step 7 (Results) → Step 8 (Summary)
 - Step 6: 30 minutes (Re-testing)
 - Step 7-8: 1 hour (Results + Summary)
 - **Total: ~5.5 hours**
+
+### Estimated Time (Bob/AI Implementation)
+- Steps 1-2: 5 minutes (Read existing code + Generate test file)
+- Step 3: 5-10 minutes (Execute tests + Wait for results)
+- Step 4: 10 minutes (Apply code changes with locking mechanism)
+- Step 5: 3 minutes (Generate documentation)
+- Step 6: 5-10 minutes (Re-run tests + Wait for results)
+- Step 7-8: 5 minutes (Compile results + Generate summary report)
+- **Active Tool Time: ~30-40 minutes**
+- **Wall-Clock Time: ~45-60 minutes** (including test execution and user confirmations)
+
+**Note:** Bob implementation is significantly faster due to:
+- No context switching or decision fatigue
+- Parallel information processing
+- Automated code generation and testing
+- However, wall-clock time depends on test execution duration and user response times for confirmations between steps
 
 ---
 
