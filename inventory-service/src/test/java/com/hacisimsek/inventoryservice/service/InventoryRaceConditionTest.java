@@ -44,8 +44,6 @@ import static org.junit.jupiter.api.Assertions.*;
         classes = InventoryServiceApplication.class,
         properties = {
                 "spring.kafka.listener.auto-startup=false",
-                "spring.kafka.bootstrap-servers=localhost:9092",
-                "spring.data.mongodb.uri=mongodb://localhost:27017/test-inventory-db",
                 "eureka.client.enabled=false"
         }
 )

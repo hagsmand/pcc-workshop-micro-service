@@ -1,0 +1,271 @@
+Installing parent POM...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.hacisimsek:ecommerce-microservices >---------------
+[INFO] Building ecommerce-microservices 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- spring-boot:3.2.12:repackage (repackage) @ ecommerce-microservices ---
+[INFO] 
+[INFO] --- install:3.1.3:install (default-install) @ ecommerce-microservices ---
+[INFO] Installing /workspace/pom.xml to /root/.m2/repository/com/hacisimsek/ecommerce-microservices/0.0.1-SNAPSHOT/ecommerce-microservices-0.0.1-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  21.567 s
+[INFO] Finished at: 2026-04-29T19:46:13Z
+[INFO] ------------------------------------------------------------------------
+Building common-library...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.hacisimsek:common-library >--------------------
+[INFO] Building common-library 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ common-library ---
+[INFO] Deleting /workspace/common-library/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ common-library ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ common-library ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 10 source files with javac [debug release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ common-library ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ common-library ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 1 source file with javac [debug release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ common-library ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ common-library ---
+[INFO] Building jar: /workspace/common-library/target/common-library-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.2.12:repackage (repackage) @ common-library ---
+[INFO] 
+[INFO] --- install:3.1.3:install (default-install) @ common-library ---
+[INFO] Installing /workspace/common-library/pom.xml to /root/.m2/repository/com/hacisimsek/common-library/0.0.1-SNAPSHOT/common-library-0.0.1-SNAPSHOT.pom
+[INFO] Installing /workspace/common-library/target/common-library-0.0.1-SNAPSHOT.jar to /root/.m2/repository/com/hacisimsek/common-library/0.0.1-SNAPSHOT/common-library-0.0.1-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  24.427 s
+[INFO] Finished at: 2026-04-29T19:46:38Z
+[INFO] ------------------------------------------------------------------------
+Running race condition tests...
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.hacisimsek:inventory-service >------------------
+[INFO] Building inventory-service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ inventory-service ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ inventory-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ inventory-service ---
+[INFO] Copying 2 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ inventory-service ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 6 source files with javac [debug release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ inventory-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest
+2026-04-29T19:46:53.362Z  INFO 206 --- [inventory-service] [           main] c.h.i.s.InventoryRaceConditionTest       : Starting InventoryRaceConditionTest using Java 17.0.15 with PID 206 (started by root in /workspace/inventory-service)
+2026-04-29T19:46:53.364Z  INFO 206 --- [inventory-service] [           main] c.h.i.s.InventoryRaceConditionTest       : The following 1 profile is active: "test"
+2026-04-29T19:46:54.060Z  INFO 206 --- [inventory-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-04-29T19:46:54.155Z  INFO 206 --- [inventory-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 92 ms. Found 2 MongoDB repository interfaces.
+2026-04-29T19:46:54.285Z  INFO 206 --- [inventory-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=021619b3-bea4-379f-9abe-ebc6d6e022e5
+2026-04-29T19:46:54.904Z  WARN 206 --- [inventory-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2026-04-29T19:46:54.906Z  WARN 206 --- [inventory-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2026-04-29T19:46:55.042Z  INFO 206 --- [inventory-service] [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "4.11.5"}, "os": {"type": "Linux", "name": "Linux", "architecture": "aarch64", "version": "6.12.13-200.fc41.aarch64"}, "platform": "Java/Eclipse Adoptium/17.0.15+6"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=null, streamFactoryFactory=null, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@543ac221], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@2270f58d, com.mongodb.Jep395RecordCodecProvider@50e1f3fc, com.mongodb.KotlinCodecProvider@54737322]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[mongodb:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@56da8847], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
+2026-04-29T19:46:55.059Z  INFO 206 --- [inventory-service] [}-mongodb:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=mongodb:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=21, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=16623992}
+2026-04-29T19:46:55.687Z  INFO 206 --- [inventory-service] [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-04-29T19:46:55.734Z  INFO 206 --- [inventory-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-04-29T19:46:55.794Z  INFO 206 --- [inventory-service] [           main] c.h.i.s.InventoryRaceConditionTest       : Started InventoryRaceConditionTest in 2.656 seconds (process running for 3.242)
+2026-04-29T19:46:55.929Z  INFO 206 --- [inventory-service] [pool-3-thread-1] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: a9b32cdf-73b9-47de-acc1-fe152159c4c3
+2026-04-29T19:46:55.929Z  INFO 206 --- [inventory-service] [pool-3-thread-2] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: c38fabf1-f535-4551-8cd9-4dca7df69647
+2026-04-29T19:46:55.971Z  INFO 206 --- [inventory-service] [pool-3-thread-2] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: c38fabf1-f535-4551-8cd9-4dca7df69647
+Thread 1 - Reservation SUCCEEDED
+2026-04-29T19:46:55.974Z  INFO 206 --- [inventory-service] [pool-3-thread-1] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: a9b32cdf-73b9-47de-acc1-fe152159c4c3
+Thread 0 - Reservation SUCCEEDED
+
+=== Test Case 1 Results ===
+Initial Available: 10 units
+Requests: 2 threads × 8 units = 16 units total
+Success Count: 2
+Failure Count: 0
+Final Available: -6
+Final Reserved: 16
+2026-04-29T19:46:56.015Z  INFO 206 --- [inventory-service] [pool-4-thread-1] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: ce44f4d2-78b8-48e4-9a48-8d125078aa86
+2026-04-29T19:46:56.016Z  INFO 206 --- [inventory-service] [pool-4-thread-2] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: d2dfc8af-8fdd-4c3b-bead-742c3f715c71
+2026-04-29T19:46:56.016Z  INFO 206 --- [inventory-service] [pool-4-thread-3] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 48642842-9c66-4cfa-b624-0e84da15322d
+2026-04-29T19:46:56.025Z  INFO 206 --- [inventory-service] [pool-4-thread-1] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: ce44f4d2-78b8-48e4-9a48-8d125078aa86
+Thread 0 - Reservation SUCCEEDED
+2026-04-29T19:46:56.031Z  INFO 206 --- [inventory-service] [pool-4-thread-3] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 48642842-9c66-4cfa-b624-0e84da15322d
+Thread 2 - Reservation SUCCEEDED
+2026-04-29T19:46:56.040Z  INFO 206 --- [inventory-service] [pool-4-thread-2] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: d2dfc8af-8fdd-4c3b-bead-742c3f715c71
+Thread 1 - Reservation SUCCEEDED
+
+=== Test Case 3 Results ===
+Initial: Product A = 5 units, Product B = 5 units
+Requests: 3 threads × (3 units A + 3 units B)
+Success Count: 3
+Failure Count: 0
+Product A - Available: -4, Reserved: 9
+Product B - Available: -4, Reserved: 9
+2026-04-29T19:46:56.053Z  INFO 206 --- [inventory-service] [ool-5-thread-10] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 7f99d0b9-18f7-41ea-b5a4-62bd1733f9f9
+2026-04-29T19:46:56.053Z  INFO 206 --- [inventory-service] [pool-5-thread-4] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 291018a3-8e51-4b56-a306-d59af2df6761
+2026-04-29T19:46:56.053Z  INFO 206 --- [inventory-service] [pool-5-thread-1] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 51edae49-0f3a-4e91-b7bb-97a429cb60bc
+2026-04-29T19:46:56.053Z  INFO 206 --- [inventory-service] [pool-5-thread-3] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: dbd3860e-87d2-4d87-b82f-82d99c6be0ad
+2026-04-29T19:46:56.054Z  INFO 206 --- [inventory-service] [pool-5-thread-2] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 0aaa2507-37e2-4b25-a8d4-bc1457bd8d85
+2026-04-29T19:46:56.055Z  INFO 206 --- [inventory-service] [pool-5-thread-5] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 1d1e40e4-0c2b-4148-8cc6-6204f8fd3c40
+2026-04-29T19:46:56.056Z  INFO 206 --- [inventory-service] [pool-5-thread-6] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 23ccb73c-7c27-49bc-8ed5-2d16c11cd569
+2026-04-29T19:46:56.056Z  INFO 206 --- [inventory-service] [pool-5-thread-7] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 28f2e02a-2c27-4b54-b35b-7966b4746bd9
+2026-04-29T19:46:56.057Z  INFO 206 --- [inventory-service] [pool-5-thread-8] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: b1d68a27-1f05-4b32-b78b-4e363a3050cf
+2026-04-29T19:46:56.058Z  INFO 206 --- [inventory-service] [pool-5-thread-9] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: a60c3c08-6066-4c31-8ba3-3f51540443ba
+2026-04-29T19:46:56.062Z  INFO 206 --- [inventory-service] [pool-5-thread-5] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 1d1e40e4-0c2b-4148-8cc6-6204f8fd3c40
+Thread 4 - Reservation SUCCEEDED
+2026-04-29T19:46:56.068Z  INFO 206 --- [inventory-service] [pool-5-thread-3] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: dbd3860e-87d2-4d87-b82f-82d99c6be0ad
+Thread 2 - Reservation SUCCEEDED
+2026-04-29T19:46:56.069Z  INFO 206 --- [inventory-service] [pool-5-thread-4] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 291018a3-8e51-4b56-a306-d59af2df6761
+Thread 3 - Reservation SUCCEEDED
+2026-04-29T19:46:56.069Z  INFO 206 --- [inventory-service] [pool-5-thread-1] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 51edae49-0f3a-4e91-b7bb-97a429cb60bc
+Thread 0 - Reservation SUCCEEDED
+2026-04-29T19:46:56.070Z  INFO 206 --- [inventory-service] [pool-5-thread-6] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 23ccb73c-7c27-49bc-8ed5-2d16c11cd569
+Thread 5 - Reservation SUCCEEDED
+2026-04-29T19:46:56.070Z  INFO 206 --- [inventory-service] [pool-5-thread-2] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 0aaa2507-37e2-4b25-a8d4-bc1457bd8d85
+Thread 1 - Reservation SUCCEEDED
+2026-04-29T19:46:56.071Z  INFO 206 --- [inventory-service] [ool-5-thread-10] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 7f99d0b9-18f7-41ea-b5a4-62bd1733f9f9
+Thread 9 - Reservation SUCCEEDED
+2026-04-29T19:46:56.071Z  INFO 206 --- [inventory-service] [pool-5-thread-9] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: a60c3c08-6066-4c31-8ba3-3f51540443ba
+Thread 8 - Reservation SUCCEEDED
+2026-04-29T19:46:56.073Z  INFO 206 --- [inventory-service] [pool-5-thread-7] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 28f2e02a-2c27-4b54-b35b-7966b4746bd9
+Thread 6 - Reservation SUCCEEDED
+2026-04-29T19:46:56.073Z  INFO 206 --- [inventory-service] [pool-5-thread-8] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: b1d68a27-1f05-4b32-b78b-4e363a3050cf
+Thread 7 - Reservation SUCCEEDED
+
+=== Test Case 2 Results ===
+Initial Available: 50 units
+Requests: 10 threads × 10 units = 100 units total
+Success Count: 10
+Failure Count: 0
+Final Available: 0
+Final Reserved: 50
+2026-04-29T19:46:56.085Z  INFO 206 --- [inventory-service] [pool-6-thread-5] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: d6b89746-586b-4c3a-976c-863d783aae08
+2026-04-29T19:46:56.086Z  INFO 206 --- [inventory-service] [pool-6-thread-2] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: fc528ebb-62a7-4869-9d7a-0581a96fa23c
+2026-04-29T19:46:56.086Z  INFO 206 --- [inventory-service] [pool-6-thread-1] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 8b290069-7b35-4c78-b9f2-5aed6ea366ff
+2026-04-29T19:46:56.090Z  INFO 206 --- [inventory-service] [pool-6-thread-3] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: 05c10a9f-1396-48b4-a727-f7148c89c890
+2026-04-29T19:46:56.092Z  INFO 206 --- [inventory-service] [pool-6-thread-4] c.h.i.service.impl.InventoryServiceImpl  : Processing inventory reservation for order: a1275e69-051c-4f0d-adb1-bad081c738c8
+2026-04-29T19:46:56.095Z  INFO 206 --- [inventory-service] [pool-6-thread-2] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: fc528ebb-62a7-4869-9d7a-0581a96fa23c
+Thread 1 - Reservation SUCCEEDED
+2026-04-29T19:46:56.095Z  INFO 206 --- [inventory-service] [pool-6-thread-3] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 05c10a9f-1396-48b4-a727-f7148c89c890
+Thread 2 - Reservation SUCCEEDED
+2026-04-29T19:46:56.099Z  INFO 206 --- [inventory-service] [pool-6-thread-5] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: d6b89746-586b-4c3a-976c-863d783aae08
+Thread 4 - Reservation SUCCEEDED
+2026-04-29T19:46:56.101Z  INFO 206 --- [inventory-service] [pool-6-thread-1] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: 8b290069-7b35-4c78-b9f2-5aed6ea366ff
+Thread 0 - Reservation SUCCEEDED
+2026-04-29T19:46:56.101Z  INFO 206 --- [inventory-service] [pool-6-thread-4] c.h.i.service.impl.InventoryServiceImpl  : Inventory successfully reserved for order: a1275e69-051c-4f0d-adb1-bad081c738c8
+Thread 3 - Reservation SUCCEEDED
+
+=== Test Case 4 Results ===
+Initial Available: 20 units
+Requests: 5 threads × 5 units = 25 units total
+Success Count: 5
+Failure Count: 0
+Final Available: 5
+Final Reserved: 15
+[ERROR] Tests run: 4, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 3.193 s <<< FAILURE! -- in com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest
+[ERROR] com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest.testBasicConcurrentReservation -- Time elapsed: 0.161 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Available quantity should never be negative (overselling detected!) ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest.testBasicConcurrentReservation(InventoryRaceConditionTest.java:157)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[ERROR] com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest.testMultipleProductsRaceCondition -- Time elapsed: 0.054 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Product A available quantity should never be negative ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest.testMultipleProductsRaceCondition(InventoryRaceConditionTest.java:348)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[ERROR] com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest.testHighConcurrency -- Time elapsed: 0.030 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Exactly 5 reservations should succeed (50 units / 10 units per order) ==> expected: <5> but was: <10>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
+	at com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest.testHighConcurrency(InventoryRaceConditionTest.java:247)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[ERROR] com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest.testRapidSequentialRequests -- Time elapsed: 0.026 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Exactly 4 reservations should succeed (20 units / 5 units per order) ==> expected: <4> but was: <5>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
+	at com.hacisimsek.inventoryservice.service.InventoryRaceConditionTest.testRapidSequentialRequests(InventoryRaceConditionTest.java:440)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   InventoryRaceConditionTest.testBasicConcurrentReservation:157 Available quantity should never be negative (overselling detected!) ==> expected: <true> but was: <false>
+[ERROR]   InventoryRaceConditionTest.testHighConcurrency:247 Exactly 5 reservations should succeed (50 units / 10 units per order) ==> expected: <5> but was: <10>
+[ERROR]   InventoryRaceConditionTest.testMultipleProductsRaceCondition:348 Product A available quantity should never be negative ==> expected: <true> but was: <false>
+[ERROR]   InventoryRaceConditionTest.testRapidSequentialRequests:440 Exactly 4 reservations should succeed (20 units / 5 units per order) ==> expected: <4> but was: <5>
+[INFO] 
+[ERROR] Tests run: 4, Failures: 4, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  17.060 s
+[INFO] Finished at: 2026-04-29T19:46:56Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.1.2:test (default-test) on project inventory-service: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /workspace/inventory-service/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
