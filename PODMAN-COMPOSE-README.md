@@ -5,7 +5,7 @@ This guide explains how to build and run the e-commerce microservices using Podm
 ## Prerequisites
 
 - Podman installed on your system
-- Podman Compose installed (`pip install podman-compose`)
+- Podman Compose support available through `podman compose`
 - At least 8GB of RAM available
 - Sufficient disk space for building Maven projects and Docker images
 
@@ -34,7 +34,7 @@ The project includes the following services:
 ### 1. Build and Start All Services
 
 ```bash
-podman-compose -f podman-compose.yml up --build
+podman compose -f podman-compose.yml up --build
 ```
 
 This command will:
@@ -46,31 +46,31 @@ This command will:
 ### 2. Start Services in Detached Mode
 
 ```bash
-podman-compose -f podman-compose.yml up --build -d
+podman compose -f podman-compose.yml up --build -d
 ```
 
 ### 3. View Logs
 
 View logs for all services:
 ```bash
-podman-compose -f podman-compose.yml logs -f
+podman compose -f podman-compose.yml logs -f
 ```
 
 View logs for a specific service:
 ```bash
-podman-compose -f podman-compose.yml logs -f order-service
+podman compose -f podman-compose.yml logs -f order-service
 ```
 
 ### 4. Stop Services
 
 ```bash
-podman-compose -f podman-compose.yml down
+podman compose -f podman-compose.yml down
 ```
 
 ### 5. Stop and Remove Volumes
 
 ```bash
-podman-compose -f podman-compose.yml down -v
+podman compose -f podman-compose.yml down -v
 ```
 
 ## Service Startup Order
@@ -111,7 +111,7 @@ curl http://localhost:8761/actuator/health
 2. Ensure you have enough memory (at least 8GB recommended)
 3. Check logs for specific service errors:
    ```bash
-   podman-compose -f podman-compose.yml logs service-name
+   podman compose -f podman-compose.yml logs service-name
    ```
 
 ### Build failures
@@ -119,7 +119,7 @@ curl http://localhost:8761/actuator/health
 1. Ensure you have a stable internet connection for Maven dependencies
 2. Clear Maven cache if needed:
    ```bash
-   podman-compose -f podman-compose.yml down
+   podman compose -f podman-compose.yml down
    podman volume prune
    ```
 
@@ -128,8 +128,8 @@ curl http://localhost:8761/actuator/health
 1. Wait for PostgreSQL and MongoDB to fully initialize
 2. Check database logs:
    ```bash
-   podman-compose -f podman-compose.yml logs postgres
-   podman-compose -f podman-compose.yml logs mongodb
+   podman compose -f podman-compose.yml logs postgres
+   podman compose -f podman-compose.yml logs mongodb
    ```
 
 ## Rebuilding Specific Services
@@ -137,7 +137,7 @@ curl http://localhost:8761/actuator/health
 To rebuild a specific service without rebuilding everything:
 
 ```bash
-podman-compose -f podman-compose.yml up --build --force-recreate order-service
+podman compose -f podman-compose.yml up --build --force-recreate order-service
 ```
 
 ## Development Workflow
@@ -164,60 +164,52 @@ This will:
 
 #### 2. **Run Unit Tests Before Building**
 
-To run unit tests for a specific service, you need to build the common-library first (since services depend on it):
+Run unit tests inside the controlled Maven container defined in `podman-compose.test.yml`:
 
 ```bash
-# Step 1: Build common-library and install to local Maven repo
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  bash -c "mvn -N install && mvn -f common-library/pom.xml clean install -DskipTests"
+# Run all unit tests
+podman compose -f podman-compose.test.yml run --rm unit-tests
 
-# Step 2: Run tests for the specific service
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml test
+# Run tests for a specific service and required upstream modules
+MAVEN_MODULES="-pl inventory-service -am" \
+  podman compose -f podman-compose.test.yml run --rm unit-tests
 
-# Or run tests for all services at once
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn test
+# Run a specific test class or method
+MAVEN_MODULES="-pl inventory-service -am" MAVEN_ARGS="-Dtest=InventoryServiceImplTest" \
+  podman compose -f podman-compose.test.yml run --rm unit-tests
 ```
 
-**Note**: We use a named volume `maven-repo` to persist the Maven local repository between container runs. This avoids rebuilding common-library every time.
+**Note**: The test compose file persists Maven dependencies in the `maven-repo` volume. It also prevents Eureka register/fetch behavior, disables Kafka listener startup, and uses H2 for JPA context-load tests.
 
 #### 3. **Complete Development Cycle for a Service**
 
 ```bash
-# Step 1: Build common-library (if not already built)
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  bash -c "mvn -N install && mvn -f common-library/pom.xml clean install -DskipTests"
+# Step 1: Run unit tests
+MAVEN_MODULES="-pl inventory-service -am" \
+  podman compose -f podman-compose.test.yml run --rm unit-tests
 
-# Step 2: Run unit tests
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml clean test
-
-# Step 3: If tests pass, rebuild and restart the service
+# Step 2: If tests pass, rebuild and restart the service
 podman compose -f podman-compose.yml up --build --force-recreate inventory-service -d
 
-# Step 4: View logs to verify
+# Step 3: View logs to verify
 podman compose -f podman-compose.yml logs -f inventory-service
 
-# Step 5: Test the API
+# Step 4: Test the API
 curl http://localhost:8082/actuator/health
 ```
 
-#### 4. **Run Integration Tests**
+#### 4. **Run Coverage**
 
 ```bash
-# Build common-library first
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  bash -c "mvn -N install && mvn -f common-library/pom.xml clean install -DskipTests"
+# Run all tests and generate JaCoCo reports
+podman compose -f podman-compose.test.yml run --rm coverage
 
-# Run integration tests for a specific service
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml verify -P integration-test
-
-# Run integration tests for all services
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn verify -P integration-test
+# Run coverage for a specific service
+MAVEN_MODULES="-pl inventory-service -am" \
+  podman compose -f podman-compose.test.yml run --rm coverage
 ```
+
+Coverage reports are written to each module's `target/site/jacoco/index.html`.
 
 #### 5. **Debug a Service**
 
@@ -275,52 +267,41 @@ services:
 podman compose -f podman-compose.yml -f podman-compose.dev.yml up inventory-service
 ```
 
-#### Running Tests in Watch Mode
+#### Rerunning Tests During Development
 
 ```bash
-# Build common-library first
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  bash -c "mvn -N install && mvn -f common-library/pom.xml clean install -DskipTests"
+# Run a service test set repeatedly as you make changes
+MAVEN_MODULES="-pl inventory-service -am" \
+  podman compose -f podman-compose.test.yml run --rm unit-tests
 
-# Run tests in watch mode (re-runs on file changes)
-podman run --rm -it -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml test-compile surefire:test -Dsurefire.rerunFailingTestsCount=0
+# Run a specific test class
+MAVEN_MODULES="-pl inventory-service -am" MAVEN_ARGS="-Dtest=InventoryServiceImplTest" \
+  podman compose -f podman-compose.test.yml run --rm unit-tests
 ```
 
 #### Code Quality Checks
 
 ```bash
-# Build common-library first
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  bash -c "mvn -N install && mvn -f common-library/pom.xml clean install -DskipTests"
-
 # Run code quality checks
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml checkstyle:check
+podman compose -f podman-compose.test.yml run --rm unit-tests \
+  mvn -B -ntp -pl inventory-service -am checkstyle:check
 
 # Run static analysis
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml spotbugs:check
+podman compose -f podman-compose.test.yml run --rm unit-tests \
+  mvn -B -ntp -pl inventory-service -am spotbugs:check
 ```
 
-### One-Time Setup for Testing
+### Test Cache
 
-To avoid rebuilding common-library every time, create a persistent Maven repository volume:
+The test compose workflow creates and reuses the `maven-repo` volume automatically:
 
 ```bash
-# Create a named volume for Maven repository
-podman volume create maven-repo
+# Reuse cached Maven dependencies
+podman compose -f podman-compose.test.yml run --rm unit-tests
 
-# Build and install common-library once
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  bash -c "mvn -N install && mvn -f common-library/pom.xml clean install -DskipTests"
-
-# Now you can run tests for any service without rebuilding common-library
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml test
+# Remove the cache when you want a completely fresh dependency download
+podman compose -f podman-compose.test.yml down -v
 ```
-
-**Note**: Only rebuild common-library when you make changes to it. Otherwise, reuse the existing volume.
 
 ### Common Development Commands
 

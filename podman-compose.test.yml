@@ -1,0 +1,44 @@
+name: ecommerce-unit-tests
+
+x-maven-test-runner: &maven-test-runner
+  image: ${MAVEN_IMAGE:-maven:3.9.9-eclipse-temurin-17}
+  working_dir: /workspace
+  volumes:
+    - .:/workspace
+    - maven-repo:/root/.m2
+  environment:
+    MAVEN_ARGS: ${MAVEN_ARGS:-}
+    MAVEN_MODULES: ${MAVEN_MODULES:-}
+    MAVEN_OPTS: "-Dmockito.mock-maker=subclass ${MAVEN_OPTS:-}"
+    SPRING_PROFILES_ACTIVE: test
+    SPRING_MAIN_BANNER_MODE: "off"
+    SPRING_DATASOURCE_URL: jdbc:h2:mem:pcc_unit_tests;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    SPRING_DATASOURCE_USERNAME: sa
+    SPRING_DATASOURCE_PASSWORD: ""
+    SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+    SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+    SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.H2Dialect
+    SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.H2Dialect
+    SPRING_KAFKA_BOOTSTRAP_SERVERS: 127.0.0.1:9092
+    SPRING_KAFKA_LISTENER_AUTO_STARTUP: "false"
+    SPRING_DATA_MONGODB_URI: mongodb://127.0.0.1:27017/unit-tests
+    SPRING_DATA_REDIS_HOST: 127.0.0.1
+    SPRING_DATA_REDIS_PORT: "6379"
+    EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+    EUREKA_CLIENT_FETCH_REGISTRY: "false"
+
+services:
+  unit-tests:
+    privileged: true
+    <<: *maven-test-runner
+    command: >
+      bash -lc 'mvn -B -ntp $$MAVEN_ARGS $$MAVEN_MODULES clean test'
+
+  coverage:
+    privileged: true
+    <<: *maven-test-runner
+    command: >
+      bash -lc 'mvn -B -ntp $$MAVEN_ARGS $$MAVEN_MODULES -Pcoverage clean verify'
+
+volumes:
+  maven-repo:
