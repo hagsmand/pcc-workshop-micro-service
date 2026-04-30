@@ -800,12 +800,9 @@ podman compose version
 sudo apt-get update
 sudo apt-get install -y podman
 
-# Install Podman Compose
-pip3 install podman-compose
-
 # Verify installation
 podman --version
-podman-compose --version
+podman compose version
 ```
 
 #### Linux (Fedora/RHEL/CentOS)
@@ -813,12 +810,9 @@ podman-compose --version
 # Install Podman (usually pre-installed)
 sudo dnf install -y podman
 
-# Install Podman Compose
-pip3 install podman-compose
-
 # Verify installation
 podman --version
-podman-compose --version
+podman compose version
 ```
 
 #### Windows
@@ -1013,25 +1007,26 @@ podman compose -f podman-compose.yml logs -f inventory-service
 
 #### Run Tests Before Building
 ```bash
-# One-time setup: Create Maven repository volume and build common-library
-podman volume create maven-repo
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  bash -c "mvn -N install && mvn -f common-library/pom.xml clean install -DskipTests"
-
-# Run unit tests for a specific service
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml test
-
 # Run all tests
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn test
+podman compose -f podman-compose.test.yml run --rm unit-tests
+
+# Run tests for a specific service and its dependencies
+MAVEN_MODULES="-pl inventory-service -am" \
+  podman compose -f podman-compose.test.yml run --rm unit-tests
+
+# Run a specific test class or method
+MAVEN_MODULES="-pl inventory-service -am" MAVEN_ARGS="-Dtest=InventoryServiceImplTest" \
+  podman compose -f podman-compose.test.yml run --rm unit-tests
+
+# Run all tests and generate JaCoCo coverage reports
+podman compose -f podman-compose.test.yml run --rm coverage
 ```
 
 #### Complete Development Cycle
 ```bash
-# 1. Run tests (assumes common-library is already built in maven-repo volume)
-podman run --rm -v $(pwd):/app -v maven-repo:/root/.m2 -w /app maven:3.9-eclipse-temurin-17 \
-  mvn -f inventory-service/pom.xml clean test
+# 1. Run tests in the controlled Maven container
+MAVEN_MODULES="-pl inventory-service -am" \
+  podman compose -f podman-compose.test.yml run --rm unit-tests
 
 # 2. If tests pass, rebuild and restart
 podman compose -f podman-compose.yml up --build --force-recreate inventory-service -d
@@ -1040,7 +1035,7 @@ podman compose -f podman-compose.yml up --build --force-recreate inventory-servi
 curl http://localhost:8082/actuator/health
 ```
 
-**Note**: The `maven-repo` volume persists the Maven local repository, so you only need to build common-library once unless you modify it.
+**Note**: The `podman-compose.test.yml` workflow runs Maven inside a container with a named `maven-repo` cache volume. The compose test environment prevents Eureka register/fetch behavior, disables Kafka listener startup for unit tests, and uses H2 for JPA context-load tests.
 
 ### Common Development Commands
 
@@ -1057,9 +1052,11 @@ podman compose -f podman-compose.yml restart <service-name>
 # Execute command in container
 podman compose -f podman-compose.yml exec <service-name> bash
 
-# Run integration tests
-podman run --rm -v $(pwd):/app -w /app maven:3.9-eclipse-temurin-17 \
-  mvn verify -P integration-test
+# Run unit tests in a container
+podman compose -f podman-compose.test.yml run --rm unit-tests
+
+# Run coverage in a container
+podman compose -f podman-compose.test.yml run --rm coverage
 ```
 
 For detailed development workflows, debugging, and best practices, see [PODMAN-COMPOSE-README.md](PODMAN-COMPOSE-README.md).
