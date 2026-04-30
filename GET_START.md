@@ -109,11 +109,45 @@ Please also update the README and other related documentation and visualization 
 ### 2.4 Add the unit test
 ### Edit Here
 
-## Step 3 Security scan and issue fix
-### Edit Here
-### Add parts of code that has vulnerability issues
-### Use Bob finding 
-### Use Bob shell to scan again
+## Step 3: Security Vulnerability Detection and Fix
+
+### 3.1 Bob Findings
+followthese steps to utilise bob findings:
+1. switch branch to `security` using the following command
+```
+git checkout security
+```
+or go to the github browser and click on `branch in the menu, choose `security` and download zip file
+
+2. Open the **Bob Findings** panel in your IDE
+![alt text](<get_start_assets/bob-finding.png>)
+3. Select a security finding from the Bob Findings panel
+2. Click on the **Quick Fix** option
+3. Review Bob's suggested fix
+4. Accept the fix to automatically remediate the vulnerability
+
+### 3.2 Race condition imporvement for Inventory Service
+
+send the following massage to BOB to initiate the race condition improvement for the inventory service:
+```
+I want to improve the race condition for the inventory service. Use the @RACE_CONDITION_ANALYSIS_AND_FIX_PLAN_COMPLETE.md as a guideline. to create test file, run the test file on container, and fix the issue.
+```
+BOB will then follow these 8 steps provided in the plan: ![alt text](get_start_assets/race-list.png)
+
+To execute the race condition tests using the provided Podman Compose configuration:
+
+```bash
+podman-compose -f podman-compose.race-condition-test.yml up race-condition-tests
+```
+
+To clean up the test service, use the following command
+```
+podman-compose -f podman-compose.race-condition-test.yml down
+
+bash scripts/cleanup-race-test-containers.sh
+```
+
+
 
 ## Appendix
 # Accessing Services

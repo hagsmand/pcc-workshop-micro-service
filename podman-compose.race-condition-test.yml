@@ -1,0 +1,115 @@
+name: ecommerce-race-condition-tests
+
+x-maven-test-runner: &maven-test-runner
+  image: ${MAVEN_IMAGE:-maven:3.9.9-eclipse-temurin-17}
+  working_dir: /workspace
+  volumes:
+    - .:/workspace
+    - maven-repo:/root/.m2
+  environment:
+    MAVEN_ARGS: ${MAVEN_ARGS:-}
+    MAVEN_OPTS: "-Dmockito.mock-maker=subclass ${MAVEN_OPTS:-}"
+    SPRING_PROFILES_ACTIVE: test
+    SPRING_MAIN_BANNER_MODE: "off"
+    SPRING_DATASOURCE_URL: jdbc:h2:mem:pcc_race_tests;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    SPRING_DATASOURCE_USERNAME: sa
+    SPRING_DATASOURCE_PASSWORD: ""
+    SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+    SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+    SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.H2Dialect
+    SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.H2Dialect
+    SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    SPRING_KAFKA_LISTENER_AUTO_STARTUP: "false"
+    SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/race-condition-tests
+    SPRING_DATA_REDIS_HOST: redis
+    SPRING_DATA_REDIS_PORT: "6379"
+    EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+    EUREKA_CLIENT_FETCH_REGISTRY: "false"
+  depends_on:
+    mongodb:
+      condition: service_healthy
+    kafka:
+      condition: service_started
+    redis:
+      condition: service_healthy
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb-race-test
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: race-condition-tests
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - race-test-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-race-test
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - race-test-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper-race-test
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - race-test-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka-race-test
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - race-test-network
+
+  race-condition-tests:
+    privileged: true
+    <<: *maven-test-runner
+    container_name: race-condition-test-runner
+    networks:
+      - race-test-network
+    command: >
+      bash -lc '
+        echo "Installing parent POM..." &&
+        mvn -B -ntp -N install &&
+        echo "Building common-library..." &&
+        mvn -B -ntp -pl common-library clean install -DskipTests &&
+        echo "Running race condition tests..." &&
+        mvn -B -ntp -pl inventory-service -Dtest=InventoryRaceConditionTest test
+      '
+
+volumes:
+  maven-repo:
+
+networks:
+  race-test-network:
+    driver: bridge
+
+# Made with Bob
