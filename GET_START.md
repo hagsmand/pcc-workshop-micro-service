@@ -1,3 +1,13 @@
+## Setup Bob
+1. Go to https://bob.ibm.com/
+2. Click 'Download' and click 'Download for macOS/Windows'
+3. Install the downloaded program.
+4. Go back to https://bob.ibm.com/ and click 'Get free trial'
+5. Complete registration. You may use Google account if you have.
+6. Go back to Bob application. Click 'Sign in' on the chat box.
+7. The program should redirect you to browser to login.
+
+
 ## Step 0: Setup Project
 1. Fork this repository using your **private** github account. Ensure it's on your account after forked.
 2. Clone your forked project to your laptop.
