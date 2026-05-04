@@ -159,6 +159,8 @@ Lines 31-86 contain the createOrder method implementation
 
 Generate a complete, runnable test method.
 ```
+### Verify by sending this prompt to Bob:
+`Run @/podman-compose.test.yml`
 
 ## Step 3: Security Vulnerability Detection and Fix
 
