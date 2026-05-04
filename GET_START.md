@@ -118,7 +118,47 @@ Please also update the README and other related documentation and visualization 
 ```
 
 ### 2.4 Add the unit test
-### Edit Here
+### Use the example prompt and input to Bob:
+```
+I need to write a unit test for the OrderServiceImpl class in a Spring Boot microservice.
+
+CONTEXT:
+- Service: OrderServiceImpl
+- Method: createOrder(OrderRequest orderRequest)
+- Dependencies: OrderRepository (mocked), KafkaTemplate (mocked)
+- Testing Framework: JUnit 5, Mockito
+- Pattern: Given-When-Then
+
+BUSINESS SCENARIO:
+Given a customer with ID "550e8400-e29b-41d4-a716-446655440000" wants to order 2 units of "Laptop" (product ID: "660e8400-e29b-41d4-a716-446655440000") at $1000 per unit
+When the createOrder method is called
+Then:
+- The order should be saved to the repository
+- The total amount should be calculated as $2000
+- The initial status should be PENDING
+- The status should be updated to INVENTORY_CHECKING
+- An OrderCreatedEvent should be published to Kafka topic "order-events"
+- The saved order should be returned as OrderResponse
+
+REQUIREMENTS:
+1. Use @ExtendWith(MockitoExtension.class)
+2. Mock OrderRepository and KafkaTemplate
+3. Use @InjectMocks for OrderServiceImpl
+4. Test method name: shouldCreateOrderWithCorrectTotalAndPublishEventWhenValidRequestProvided
+5. Verify:
+   - repository.save() called twice (initial save and status update)
+   - kafkaTemplate.send() called once with correct topic and event
+   - Total amount calculation is correct
+   - Status transitions are correct
+6. DO NOT create a fake test - use actual business logic
+7. Include assertions for all critical behaviors
+
+CODE CONTEXT:
+See order-service/src/main/java/com/hacisimsek/order/service/impl/OrderServiceImpl.java
+Lines 31-86 contain the createOrder method implementation
+
+Generate a complete, runnable test method.
+```
 
 ## Step 3: Security Vulnerability Detection and Fix
 
