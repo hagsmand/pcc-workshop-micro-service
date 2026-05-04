@@ -90,6 +90,7 @@ podman compose -f podman-compose.yml up --build -d
 #### 2.1. Create an issue in Github Backlog by clicking `+ Add Item` button.
 #### 2.2. Type `Graceful out-of-stock handling in Saga Tracking UI` and click `Create new issue` then click `Blank issue`.
 #### 2.3. Copy content from path `get_start_assets/lab1_graceful_handling/issue.md` into the issue page, click create issue, and assign to yourself.
+#### 2.4. If you have an issue with permission to create issue go to 'project setting' and tick on 'Issues' under Features section.
 
 ### 2.2 Ask Bob to Fix the Issue
 
