@@ -31,6 +31,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderResponse createOrder(OrderRequest orderRequest) {
+        // VULNERABILITY 2: Sensitive data logging - exposing customer information
+        log.info("Creating order for customer: {} with credit card: {}, CVV: {}, billing address: {}",
+                orderRequest.getCustomerId(),
+                "4532-1234-5678-9010",  // Simulated credit card number
+                "123",                   // Simulated CVV
+                "123 Main St, City, State 12345");  // Simulated address
+        
         // Convert order items from request
         List<OrderItem> orderItems = orderRequest.getItems().stream()
                 .map(item -> OrderItem.builder()

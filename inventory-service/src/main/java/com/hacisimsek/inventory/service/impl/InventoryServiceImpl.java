@@ -149,4 +149,13 @@ public class InventoryServiceImpl implements InventoryService {
 
         log.info("Reservation cancelled and inventory released for order: {}", orderId);
     }
+
+    // VULNERABILITY 1: SQL Injection risk - String concatenation in query
+    public List<InventoryItem> searchInventoryByProductName(String productName) {
+        // VULNERABILITY: Direct string concatenation creates SQL injection risk
+        String query = "SELECT * FROM inventory_items WHERE product_name = '" + productName + "'";
+        log.info("Executing inventory search query: {}", query);
+        // This is a simulated vulnerability - in real code this would execute the query
+        return inventoryRepository.findAll();
+    }
 }
